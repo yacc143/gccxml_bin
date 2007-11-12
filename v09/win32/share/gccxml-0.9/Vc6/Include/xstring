@@ -596,7 +596,7 @@ private:
 	size_type _Len, _Res;
 	};
 template<class _E, class _Tr, class _A>
-	const basic_string<_E, _Tr, _A>::size_type
+	const typename basic_string<_E, _Tr, _A>::size_type
 		basic_string<_E, _Tr, _A>::npos = -1;
 
 #ifdef	_DLL

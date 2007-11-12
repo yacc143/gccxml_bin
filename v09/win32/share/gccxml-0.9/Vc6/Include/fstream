@@ -67,6 +67,9 @@ template<class _E, class _Tr >
 public:
 	typedef basic_filebuf<_E, _Tr> _Myt;
 	typedef basic_streambuf<_E, _Tr> _Mysb;
+        typedef typename _Mysb::int_type int_type;
+        typedef typename _Mysb::pos_type pos_type;
+        typedef typename _Mysb::off_type off_type;
 	typedef codecvt<_E, char, typename _Tr::state_type> _Cvt;
 	basic_filebuf(_Filet *_F = 0)
 		: _Loc(), _Mysb() {_Init(_F, _Newfl); }
@@ -98,8 +101,8 @@ protected:
 	virtual int_type overflow(int_type _C = _Tr::eof())
 		{if (_Tr::eq_int_type(_Tr::eof(), _C))
 			return (_Tr::not_eof(_C));
-		else if (pptr() != 0 && pptr() < epptr())
-			{*_Pninc() = _Tr::to_char_type(_C);
+		else if (this->pptr() != 0 && this->pptr() < this->epptr())
+			{*this->_Pninc() = _Tr::to_char_type(_C);
 			return (_C); }
 		else if (_File == 0)
 			return (_Tr::eof());
@@ -122,18 +125,18 @@ protected:
 						return (_Tr::eof());
 				case codecvt_base::ok:	// can fall through
 					{size_t _N = _D - _Str->begin();
-					return (fwrite(_Str->begin(), _N, 1, _File)
+					return (fwrite(_Str->begin(), 1, _N, _File)
 						== _N ? _C : _Tr::eof()); } 
 				case codecvt_base::noconv:
 					return (_Fputc(_X, _File) ? _C : _Tr::eof());
 				default:
 					return (_Tr::eof()); }}}}
 	virtual int_type pbackfail(int_type _C = _Tr::eof())
-		{if (gptr() != 0 && eback() < gptr()
+		{if (this->gptr() != 0 && this->eback() < this->gptr()
 			&& (_Tr::eq_int_type(_Tr::eof(), _C)
-			 || _Tr::eq_int_type(_Tr::to_int_type(gptr()[-1]),
+			 || _Tr::eq_int_type(_Tr::to_int_type(this->gptr()[-1]),
 				_C)))
-			{_Gndec();
+			{this->_Gndec();
 			return (_Tr::not_eof(_C)); }
 		else if (_File == 0 || _Tr::eq_int_type(_Tr::eof(), _C))
 			return (_Tr::eof());
@@ -148,13 +151,13 @@ protected:
 		else
 			return (_Tr::eof()); }
 	virtual int_type underflow()
-		{if (gptr() != 0 && gptr() < egptr())
-			return (_Tr::to_int_type(*gptr()));
+		{if (this->gptr() != 0 && this->gptr() < this->egptr())
+			return (_Tr::to_int_type(*this->gptr()));
 		else
 			return (pbackfail(uflow())); }
 	virtual int_type uflow()
-		{if (gptr() != 0 && gptr() < egptr())
-			return (_Tr::to_int_type(*_Gninc()));
+		{if (this->gptr() != 0 && this->gptr() < this->egptr())
+			return (_Tr::to_int_type(*this->_Gninc()));
 		else if (_File == 0)
 			return (_Tr::eof());
 		else if (_Pcvt == 0)
@@ -227,7 +230,7 @@ protected:
 		_State0 = _Stinit;
 		_Pcvt = 0; }
 	void _Initcvt()
-		{_Pcvt = (_Cvt *)&_USE(getloc(), _Cvt);
+		{_Pcvt = (_Cvt *)&_USE(this->getloc(), _Cvt);
 		_Loc = _ADDFAC(_Loc, _Pcvt);
 		if (_Pcvt->always_noconv())
 			_Pcvt = 0;
@@ -259,24 +262,24 @@ public:
 	basic_ifstream()
 		: basic_istream<_E, _Tr>(&_Fb) {}
 	explicit basic_ifstream(const char *_S,
-		ios_base::openmode _M = in)
+		ios_base::openmode _M = ios_base::in)
 		: basic_istream<_E, _Tr>(&_Fb)
-		{if (_Fb.open(_S, _M | in) == 0)
-			setstate(failbit); }
+		{if (_Fb.open(_S, _M | ios_base::in) == 0)
+			this->setstate(ios::failbit); }
 	virtual ~basic_ifstream()
 		{}
 	_Myfb *rdbuf() const
 		{return ((_Myfb *)&_Fb); }
 	bool is_open() const
 		{return (_Fb.is_open()); }
-	void open(const char *_S, ios_base::openmode _M = in)
-		{if (_Fb.open(_S, _M | in) == 0)
-		 	setstate(failbit); }
+	void open(const char *_S, ios_base::openmode _M = ios_base::in)
+		{if (_Fb.open(_S, _M | ios_base::in) == 0)
+		 	this->setstate(ios::failbit); }
 	void open(const char *_S, ios_base::open_mode _M)
-		{open(_S, (openmode)_M); }
+		{open(_S, (ios_base::openmode)_M); }
 	void close()
 		{if (_Fb.close() == 0)
-		 	setstate(failbit); }
+		 	this->setstate(ios::failbit); }
 private:
 	_Myfb _Fb;
 	};
@@ -297,24 +300,24 @@ public:
 	basic_ofstream()
 		: basic_ostream<_E, _Tr>(&_Fb) {}
 	explicit basic_ofstream(const char *_S,
-		ios_base::openmode _M = out | trunc)
+		ios_base::openmode _M = ios_base::out | ios_base::trunc)
 		: basic_ostream<_E, _Tr>(&_Fb)
-		{if (_Fb.open(_S, _M | out) == 0)
-			setstate(failbit); }
+		{if (_Fb.open(_S, _M | ios_base::out) == 0)
+			this->setstate(ios_base::failbit); }
 	virtual ~basic_ofstream()
 		{}
 	_Myfb *rdbuf() const
 		{return ((_Myfb *)&_Fb); }
 	bool is_open() const
 		{return (_Fb.is_open()); }
-	void open(const char *_S, ios_base::openmode _M = out | trunc)
-		{if (_Fb.open(_S, _M | out) == 0)
-		 	setstate(failbit); }
+	void open(const char *_S, ios_base::openmode _M = ios_base::out | ios_base::trunc)
+		{if (_Fb.open(_S, _M | ios_base::out) == 0)
+		 	this->setstate(ios_base::failbit); }
 	void open(const char *_S, ios_base::open_mode _M)
-		{open(_S, (openmode)_M); }
+		{open(_S, (ios_base::openmode)_M); }
 	void close()
 		{if (_Fb.close() == 0)
-		 	setstate(failbit); }
+		 	this->setstate(ios_base::failbit); }
 private:
 	_Myfb _Fb;
 	};
@@ -334,24 +337,24 @@ public:
 	basic_fstream()
 		: basic_iostream<_E, _Tr>(&_Fb) {}
 	explicit basic_fstream(const char *_S,
-		ios_base::openmode _M = in | out)
+		ios_base::openmode _M = ios_base::in | ios_base::out)
 		: basic_iostream<_E, _Tr>(&_Fb)
 		{if (_Fb.open(_S, _M) == 0)
-			setstate(failbit); }
+			this->setstate(ios::failbit); }
 	virtual ~basic_fstream()
 		{}
 	basic_filebuf<_E, _Tr> *rdbuf() const
 		{return ((basic_filebuf<_E, _Tr> *)&_Fb); }
 	bool is_open() const
 		{return (_Fb.is_open()); }
-	void open(const char *_S, ios_base::openmode _M = in | out)
+	void open(const char *_S, ios_base::openmode _M = ios_base::in | ios_base::out)
 		{if (_Fb.open(_S, _M) == 0)
-		 	setstate(failbit); }
+		 	this->setstate(ios::failbit); }
 	void open(const char *_S, ios_base::open_mode _M)
-		{open(_S, (openmode)_M); }
+		{open(_S, (ios_base::openmode)_M); }
 	void close()
 		{if (_Fb.close() == 0)
-		 	setstate(failbit); }
+		 	this->setstate(ios::failbit); }
 private:
 	basic_filebuf<_E, _Tr> _Fb;
 	};

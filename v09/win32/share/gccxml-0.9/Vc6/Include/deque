@@ -124,25 +124,25 @@ public:
 		iterator(_Tptr _P, _Mapptr _M)
 			: const_iterator(_P, _M) {}
 		reference operator*() const
-			{return (*_Next); }
+			{return (*this->_Next); }
 		_Tptr operator->() const
 			{return (&**this); }
 		iterator& operator++()
-			{if (++_Next == _Last)
+			{if (++this->_Next == _Last)
 				{_First = *++_Map;
 				_Last = _First + _DEQUESIZ;
-				_Next = _First; }
+				this->_Next = _First; }
 			return (*this); }
 		iterator operator++(int)
 			{iterator _Tmp = *this;
 			++*this;
 			return (_Tmp); }
 		iterator& operator--()
-			{if (_Next == _First)
+			{if (this->_Next == _First)
 				{_First = *--_Map;
 				_Last = _First + _DEQUESIZ;
-				_Next = _Last; }
-			--_Next;
+				this->_Next = _Last; }
+			--this->_Next;
 			return (*this); }
 		iterator operator--(int)
 			{iterator _Tmp = *this;
@@ -160,18 +160,18 @@ public:
 			{iterator _Tmp = *this;
 			return (_Tmp -= _N); }
 		difference_type operator-(const iterator& _X) const
-			{return (_Map == _X._Map ? _Next - _X._Next
+			{return (_Map == _X._Map ? this->_Next - _X._Next
 				: _DEQUESIZ * (_Map - _X._Map - 1)
-				+ (_Next - _First) + (_X._Last - _X._Next)); }
+				+ (this->_Next - _First) + (_X._Last - _X._Next)); }
 		reference operator[](difference_type _N) const
 			{return (*(*this + _N)); }
 		bool operator==(const iterator& _X) const
-			{return (_Next == _X._Next); }
+			{return (this->_Next == _X._Next); }
 		bool operator!=(const iterator& _X) const
 			{return (!(*this == _X)); }
 		bool operator<(const iterator& _X) const
 			{return (_Map < _X._Map
-				|| _Map == _X._Map && _Next < _X._Next); }
+				|| _Map == _X._Map && this->_Next < _X._Next); }
 		bool operator<=(const iterator& _X) const
 			{return (!(_X < *this)); }
 		bool operator>(const iterator& _X) const

@@ -155,6 +155,10 @@ template<class _Bfn>
 	: public unary_function<typename _Bfn::second_argument_type,
 		typename _Bfn::result_type> {
 public:
+        typedef typename unary_function<typename _Bfn::second_argument_type,
+                                        typename _Bfn::result_type>::argument_type argument_type;
+        typedef typename unary_function<typename _Bfn::second_argument_type,
+                                        typename _Bfn::result_type>::result_type result_type;
 	binder1st(const _Bfn& _X,
 		const typename _Bfn::first_argument_type& _Y)
 		: op(_X), value(_Y) {}
@@ -175,6 +179,10 @@ template<class _Bfn>
 	: public unary_function<typename _Bfn::first_argument_type,
 		typename _Bfn::result_type> {
 public:
+        typedef typename unary_function<typename _Bfn::first_argument_type,
+                                        typename _Bfn::result_type>::argument_type argument_type;
+        typedef typename unary_function<typename _Bfn::first_argument_type,
+                                        typename _Bfn::result_type>::result_type result_type;
 	binder2nd(const _Bfn& _X,
 		const typename _Bfn::second_argument_type& _Y)
 		: op(_X), value(_Y) {}
@@ -199,7 +207,8 @@ public:
 	_R operator()(_A _X) const
 		{return (_Fn(_X)); }
 protected:
-	_R (__cdecl *_Fn)(_A);
+	typedef _R (__cdecl *_FnType)(_A);
+        _FnType _Fn;
 	};
 		// TEMPLATE CLASS pointer_to_binary_function
 template<class _A1, class _A2, class _R>
@@ -212,7 +221,8 @@ public:
 	_R operator()(_A1 _X, _A2 _Y) const
 		{return (_Fn(_X, _Y)); }
 protected:
-	_R (__cdecl *_Fn)(_A1, _A2);
+	typedef _R (__cdecl *_FnType)(_A1, _A2);
+        _FnType _Fn;
 	};
 		// TEMPLATE FUNCTION ptr_fun
 template<class _A, class _R> inline

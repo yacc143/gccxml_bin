@@ -98,25 +98,25 @@ public:
 		iterator(_Nodeptr _P)
 			: const_iterator(_P) {}
 		reference operator*() const
-			{return (_Acc::_Value(_Ptr)); }
+			{return (_Acc::_Value(this->_Ptr)); }
 		_Tptr operator->() const
 			{return (&**this); }
 		iterator& operator++()
-			{_Ptr = _Acc::_Next(_Ptr);
+			{this->_Ptr = _Acc::_Next(this->_Ptr);
 			return (*this); }
 		iterator operator++(int)
 			{iterator _Tmp = *this;
 			++*this;
 			return (_Tmp); }
 		iterator& operator--()
-			{_Ptr = _Acc::_Prev(_Ptr);
+			{this->_Ptr = _Acc::_Prev(this->_Ptr);
 			return (*this); }
 		iterator operator--(int)
 			{iterator _Tmp = *this;
 			--*this;
 			return (_Tmp); }
 		bool operator==(const iterator& _X) const
-			{return (_Ptr == _X._Ptr); }
+			{return (this->_Ptr == _X._Ptr); }
 		bool operator!=(const iterator& _X) const
 			{return (!(*this == _X)); }
 		};

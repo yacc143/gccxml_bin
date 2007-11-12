@@ -117,7 +117,7 @@ template<class _E, class _Tr, class _A> inline
     ios_base::iostate _St = ios_base::goodbit;
     bool _Chg = false;
     _X.erase();
-    const _Myis::sentry _Ok(_I);
+    const typename _Myis::sentry _Ok(_I);
     if (_Ok)
         {const _Ctype& _Fac = _USE(_I.getloc(), _Ctype);
         _TRY_IO_BEGIN
@@ -152,7 +152,7 @@ template<class _E, class _Tr, class _A> inline
     ios_base::iostate _St = ios_base::goodbit;
     bool _Chg = false;
     _X.erase();
-    const _Myis::sentry _Ok(_I, true);
+    const typename _Myis::sentry _Ok(_I, true);
     if (_Ok)
         {_TRY_IO_BEGIN
         typename _Tr::int_type _C = _I.rdbuf()->sgetc();

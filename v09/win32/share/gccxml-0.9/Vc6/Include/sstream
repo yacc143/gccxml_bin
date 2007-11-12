@@ -21,6 +21,9 @@ template<class _E,
 	class _A >
 	class basic_stringbuf : public basic_streambuf<_E, _Tr> {
 public:
+        typedef typename basic_streambuf<_E, _Tr>::int_type int_type;
+        typedef typename basic_streambuf<_E, _Tr>::pos_type pos_type;
+        typedef typename basic_streambuf<_E, _Tr>::off_type off_type;
 	typedef basic_string<_E, _Tr, _A> _Mystr;
 	explicit basic_stringbuf(
 		ios_base::openmode _W = ios_base::in | ios_base::out)
@@ -31,12 +34,12 @@ public:
 	virtual ~basic_stringbuf()
 		{_Tidy(); }
 	_Mystr str() const
-		{if (!(_Strmode & _Constant) && pptr() != 0)
-			{_Mystr _Str(pbase(), (_Seekhigh < pptr()
-				? pptr() : _Seekhigh) - pbase());
+		{if (!(_Strmode & _Constant) && this->pptr() != 0)
+			{_Mystr _Str(this->pbase(), (_Seekhigh < this->pptr()
+				? this->pptr() : _Seekhigh) - this->pbase());
 			return (_Str); }
-		else if (!(_Strmode & _Noread) && gptr() != 0)
-			{_Mystr _Str(eback(), egptr() - eback());
+		else if (!(_Strmode & _Noread) && this->gptr() != 0)
+			{_Mystr _Str(this->eback(), this->egptr() - this->eback());
 			return (_Str); }
 		else
 			{_Mystr _Nul;
@@ -48,87 +51,87 @@ protected:
 	virtual int_type overflow(int_type _C = _Tr::eof())
 		{if (_Tr::eq_int_type(_Tr::eof(), _C))
 			return (_Tr::not_eof(_C));
-		else if (pptr() != 0 && pptr() < epptr())
-			{*_Pninc() = _Tr::to_char_type(_C);
+		else if (this->pptr() != 0 && this->pptr() < this->epptr())
+			{*this->_Pninc() = _Tr::to_char_type(_C);
 			return (_C); }
 		else if (_Strmode & _Constant)
 			return (_Tr::eof());
 		else
-			{size_t _Os = gptr() == 0 ? 0 : epptr() - eback();
+			{size_t _Os = this->gptr() == 0 ? 0 : this->epptr() - this->eback();
 			size_t _Ns = _Os + _Alsize;
 			_E *_P = _Al.allocate(_Ns, (void *)0);
 			if (0 < _Os)
-				_Tr::copy(_P, eback(), _Os);
+				_Tr::copy(_P, this->eback(), _Os);
 			else if (_ALSIZE < _Alsize)
 				_Alsize = _ALSIZE;
 			if (_Strmode & _Allocated)
-				_Al.deallocate(eback(), _Os);
+				_Al.deallocate(this->eback(), _Os);
 			_Strmode |= _Allocated;
 			if (_Os == 0)
 				{_Seekhigh = _P;
-				setp(_P, _P + _Ns);
-				setg(_P, _P, _P); }
+				this->setp(_P, _P + _Ns);
+				this->setg(_P, _P, _P); }
 			else
-				{_Seekhigh = _Seekhigh - eback() + _P;
-				setp(pbase() - eback() + _P,
-					pptr() - eback() + _P, _P + _Ns);
+				{_Seekhigh = _Seekhigh - this->eback() + _P;
+				this->setp(this->pbase() - this->eback() + _P,
+					this->pptr() - this->eback() + _P, _P + _Ns);
 				if (_Strmode & _Noread)
-					setg(_P, _P, _P);
+					this->setg(_P, _P, _P);
 				else
-					setg(_P, gptr() - eback() + _P, pptr() + 1); }
-			*_Pninc() = _Tr::to_char_type(_C);
+					this->setg(_P, this->gptr() - this->eback() + _P, this->pptr() + 1); }
+			*this->_Pninc() = _Tr::to_char_type(_C);
 			return (_C); }}
 	virtual int_type pbackfail(int_type _C = _Tr::eof())
-		{if (gptr() == 0 || gptr() <= eback()
+		{if (this->gptr() == 0 || this->gptr() <= this->eback()
 			|| !_Tr::eq_int_type(_Tr::eof(), _C)
-				&& !_Tr::eq(_Tr::to_char_type(_C), gptr()[-1])
+				&& !_Tr::eq(_Tr::to_char_type(_C), this->gptr()[-1])
 				&& _Strmode & _Constant)
 			return (_Tr::eof());
 		else
-			{gbump(-1);
+			{this->gbump(-1);
 			if (!_Tr::eq_int_type(_Tr::eof(), _C))
-				*gptr() = _Tr::to_char_type(_C);
+				*this->gptr() = _Tr::to_char_type(_C);
 			return (_Tr::not_eof(_C)); }}
 	virtual int_type underflow()
-		{if (gptr() == 0)
+		{if (this->gptr() == 0)
 			return (_Tr::eof());
-		else if (gptr() < egptr())
-			return (_Tr::to_int_type(*gptr()));
-		else if (_Strmode & _Noread || pptr() == 0
-			|| pptr() <= gptr() && _Seekhigh <= gptr())
+		else if (this->gptr() < this->egptr())
+			return (_Tr::to_int_type(*this->gptr()));
+		else if (_Strmode & _Noread || this->pptr() == 0
+			|| this->pptr() <= this->gptr() && _Seekhigh <= this->gptr())
 			return (_Tr::eof());
 		else
-			{if (_Seekhigh < pptr())
-				_Seekhigh = pptr();
-			setg(eback(), gptr(), _Seekhigh);
-			return (_Tr::to_int_type(*gptr())); }}
+			{if (_Seekhigh < this->pptr())
+				_Seekhigh = this->pptr();
+			this->setg(this->eback(), this->gptr(), _Seekhigh);
+			return (_Tr::to_int_type(*this->gptr())); }}
 	virtual pos_type seekoff(off_type _O, ios_base::seekdir _Way,
 		ios_base::openmode _Which = ios_base::in | ios_base::out)
-		{if (pptr() != 0 && _Seekhigh < pptr())
-			_Seekhigh = pptr();
-		if (_Which & ios_base::in && gptr() != 0)
+		{if (this->pptr() != 0 && _Seekhigh < this->pptr())
+			_Seekhigh = this->pptr();
+		if (_Which & ios_base::in && this->gptr() != 0)
 			{if (_Way == ios_base::end)
-				_O += _Seekhigh - eback();
+				_O += _Seekhigh - this->eback();
 			else if (_Way == ios_base::cur
 				&& !(_Which & ios_base::out))
-				_O += gptr() - eback();
+				_O += this->gptr() - this->eback();
 			else if (_Way != ios_base::beg)
 				_O = _BADOFF;
-			if (0 <= _O && _O <= _Seekhigh - eback())
-				{gbump(eback() - gptr() + _O);
-				if (_Which & ios_base::out && pptr() != 0)
-					setp(pbase(), gptr(), epptr()); }
+			if (0 <= _O && _O <= _Seekhigh - this->eback())
+				{this->gbump(this->eback() - this->gptr() + _O);
+				if (_Which & ios_base::out && this->pptr() != 0)
+					this->setp(this->pbase(), this->gptr(), this->epptr()); }
 			else
 				_O = _BADOFF; }
-		else if (_Which & ios_base::out && pptr() != 0)
+		else if (_Which & ios_base::out && this->pptr() != 0)
 			{if (_Way == ios_base::end)
-				_O += _Seekhigh - eback();
+				_O += _Seekhigh - this->eback();
 			else if (_Way == ios_base::cur)
-				_O += pptr() - eback();
+				_O += this->pptr() - this->eback();
 			else if (_Way != ios_base::beg)
 				_O = _BADOFF;
-			if (0 <= _O && _O <= _Seekhigh - eback())
-				pbump(eback() - pptr() + _O);
+			if (0 <= _O && _O <= _Seekhigh - this->eback())
+				this->pbump(this->eback() - this->pptr() + _O);
 			else
 				_O = _BADOFF; }
 		else
@@ -137,20 +140,20 @@ protected:
 	virtual pos_type seekpos(pos_type _P,
 		ios_base::openmode _Which = ios_base::in | ios_base::out)
 		{streamoff _O = (streamoff)_P;
-		if (pptr() != 0 && _Seekhigh < pptr())
-			_Seekhigh = pptr();
+		if (this->pptr() != 0 && _Seekhigh < this->pptr())
+			_Seekhigh = this->pptr();
 		if (_O == _BADOFF)
 			;
-		else if (_Which & ios_base::in && gptr() != 0)
-			{if (0 <= _O && _O <= _Seekhigh - eback())
-				{gbump(eback() - gptr() + _O);
-				if (_Which & ios_base::out && pptr() != 0)
-					setp(pbase(), gptr(), epptr()); }
+		else if (_Which & ios_base::in && this->gptr() != 0)
+			{if (0 <= _O && _O <= _Seekhigh - this->eback())
+				{this->gbump(this->eback() - this->gptr() + _O);
+				if (_Which & ios_base::out && this->pptr() != 0)
+					this->setp(this->pbase(), this->gptr(), this->epptr()); }
 			else
 				_O = _BADOFF; }
-		else if (_Which & ios_base::out && pptr() != 0)
-			{if (0 <= _O && _O <= _Seekhigh - eback())
-				pbump(eback() - pptr() + _O);
+		else if (_Which & ios_base::out && this->pptr() != 0)
+			{if (0 <= _O && _O <= _Seekhigh - this->eback())
+				this->pbump(this->eback() - this->pptr() + _O);
 			else
 				_O = _BADOFF; }
 		else
@@ -161,23 +164,23 @@ protected:
 		_Alsize = _MINSIZE, _Strmode = _M;
 		if (_N == 0 || (_Strmode & (_Noread | _Constant))
 			== (_Noread | _Constant))
-			{setg(0, 0, 0);
-			setp(0, 0); }
+			{this->setg(0, 0, 0);
+			this->setp(0, 0); }
 		else
 			{_E *_P = _Al.allocate(_N, (void *)0);
 			_Tr::copy(_P, _S, _N);
 			_Seekhigh = _P + _N;
 			if (!(_Strmode & _Noread))
-				setg(_P, _P, _P + _N);
+				this->setg(_P, _P, _P + _N);
 			if (!(_Strmode & _Constant))
-				{setp(_P, _P + _N);
-				if (gptr() == 0)
-					setg(_P, _P, _P); }
+				{this->setp(_P, _P + _N);
+				if (this->gptr() == 0)
+					this->setg(_P, _P, _P); }
 			_Strmode |= _Allocated; }}
 	void _Tidy()
 		{if (_Strmode & _Allocated)
-			_Al.deallocate(eback(),
-				(pptr() != 0 ? epptr() : egptr()) - eback());
+			_Al.deallocate(this->eback(),
+				(this->pptr() != 0 ? this->epptr() : this->egptr()) - this->eback());
 		_Seekhigh = 0;
 		_Strmode &= ~_Allocated; }
 private:
@@ -202,11 +205,11 @@ template<class _E,
 public:
 	typedef basic_stringbuf<_E, _Tr, _A> _Mysb;
 	typedef basic_string<_E, _Tr, _A> _Mystr;
-	explicit basic_istringstream(openmode _M = in)
-		: basic_istream<_E, _Tr>(&_Sb), _Sb(_M | in) {}
+	explicit basic_istringstream(ios_base::openmode _M = ios_base::in)
+		: basic_istream<_E, _Tr>(&_Sb), _Sb(_M | ios_base::in) {}
 	explicit basic_istringstream(const _Mystr& _S,
-		openmode _M = in)
-		: basic_istream<_E, _Tr>(&_Sb), _Sb(_S, _M | in) {}
+		ios_base::openmode _M = ios_base::in)
+		: basic_istream<_E, _Tr>(&_Sb), _Sb(_S, _M | ios_base::in) {}
 	virtual ~basic_istringstream()
 		{}
 	_Mysb *rdbuf() const
@@ -226,11 +229,11 @@ template<class _E,
 public:
 	typedef basic_stringbuf<_E, _Tr, _A> _Mysb;
 	typedef basic_string<_E, _Tr, _A> _Mystr;
-	explicit basic_ostringstream(openmode _M = out)
-		: basic_ostream<_E, _Tr>(&_Sb), _Sb(_M | out) {}
+	explicit basic_ostringstream(ios_base::openmode _M = ios_base::out)
+		: basic_ostream<_E, _Tr>(&_Sb), _Sb(_M | ios_base::out) {}
 	explicit basic_ostringstream(const _Mystr& _S,
-		openmode _M = out)
-		: basic_ostream<_E, _Tr>(&_Sb), _Sb(_S, _M | out) {}
+		ios_base::openmode _M = ios_base::out)
+		: basic_ostream<_E, _Tr>(&_Sb), _Sb(_S, _M | ios_base::out) {}
 	virtual ~basic_ostringstream()
 		{}
 	_Mysb *rdbuf() const
@@ -249,10 +252,10 @@ template<class _E,
 	class basic_stringstream : public basic_iostream<_E, _Tr> {
 public:
 	typedef basic_string<_E, _Tr, _A> _Mystr;
-	explicit basic_stringstream(openmode _W = in | out)
+	explicit basic_stringstream(ios_base::openmode _W = ios_base::in | ios_base::out)
 		: basic_iostream<_E, _Tr>(&_Sb), _Sb(_W) {}
 	explicit basic_stringstream(const _Mystr& _S,
-		openmode _W = in | out)
+		ios_base::openmode _W = ios_base::in | ios_base::out)
 		: basic_iostream<_E, _Tr>(&_Sb), _Sb(_S, _W) {}
 	virtual ~basic_stringstream()
 		{}
