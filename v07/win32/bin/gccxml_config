@@ -1,4 +1,0 @@
-GCCXML_COMPILER="msvc71"
-GCCXML_CXXFLAGS=" /DWIN32 /D_WINDOWS /W3 /Zm1000 /GX /GR"
-GCCXML_ROOT="D:/dev/language-binding/sources/gccxml_bin/v07/win32/bin"
-
