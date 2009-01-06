@@ -1,4 +1,4 @@
-.TH GCC-XML 1 "October 31, 2007" "GCC-XML 0.9.0"
+.TH GCC-XML 1 "January 06, 2009" "GCC-XML 0.9.0"
 .SH NAME
 .TP
 .B gccxml
@@ -137,19 +137,13 @@ Most users should not have to adjust the defaults for these settings.  There is 
 GCC-XML can simulate any of the following compilers:
 .TP
 .B GCC
-Versions 4.0, 3.x, and 2.95.x
-.TP
-.B SGI MIPSpro
-Version 7.3x
+Versions 4.2, 4.1, 4.0, 3.4, 3.3, 3.2, 2.95.x
 .TP
 .B Visual C++
 Versions 8, 7.1, 7.0, and 6 (sp5)
 .TP
-.B Intel C++
-Versions 7.0 and 7.1 for Linux
-.TP
-.B Borland C++
-Version 5.5.x for Windows
+.B Borland, Intel, SGI
+formerly supported but no longer tested
 .PP
 The following extra C preprocessor definitions are provided:
 .TP
@@ -193,8 +187,10 @@ This will cause the XML output to contain meta information for the '_out_' attri
 Using the 'gccxml' attribute enables meta information to be included directly within C++ source code, without the need for a custom parser to extract the meta information.  The 'gccxml' attribute is provided for convenience only - there is no guarantee that future versions of GCC will accept the '__attribute' language element in a bug-free manner.
 .SH COPYRIGHT
 .PP
-Copyright (c) 2002-2004 Kitware, Inc., Insight Consortium.
-All rights reserved.
+GCC-XML - XML output for GCC
+
+.PP
+Copyright (c) 2002-2007 Kitware, Inc., Insight Consortium
 
 .PP
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -217,6 +213,27 @@ Modified source versions must be plainly marked as such, and must not be misrepr
 
 .PP
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER AND CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+.PP
+------------------------------------------------------------
+
+.PP
+gccxml_cc1plus - A GCC parser patched for XML dumps of translation units
+
+.PP
+Copyright (c) 2002-2007 Kitware, Inc., Insight Consortium
+
+.PP
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+
+.PP
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+.PP
+You should have received a copy of the GNU General Public License along with this program; if not, write to the
+  Free Software Foundation, Inc.
+  51 Franklin Street, Fifth Floor
+  Boston, MA  02110-1301  USA
 
 .SH MAILING LIST
 For help and discussion about using gccxml, a mailing list is

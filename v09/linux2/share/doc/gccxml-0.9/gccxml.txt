@@ -214,19 +214,13 @@ used to build it.
 GCC-XML can simulate any of the following compilers:
 
   GCC
-       Versions 4.0, 3.x, and 2.95.x
-
-  SGI MIPSpro
-       Version 7.3x
+       Versions 4.2, 4.1, 4.0, 3.4, 3.3, 3.2, 2.95.x
 
   Visual C++
        Versions 8, 7.1, 7.0, and 6 (sp5)
 
-  Intel C++
-       Versions 7.0 and 7.1 for Linux
-
-  Borland C++
-       Version 5.5.x for Windows
+  Borland, Intel, SGI
+       formerly supported but no longer tested
 
 The following extra C preprocessor definitions are provided:
 

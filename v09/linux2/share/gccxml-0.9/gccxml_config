@@ -1,2 +1,2 @@
-GCCXML_COMPILER="/usr/bin/g++-4.2"
+GCCXML_COMPILER="/usr/bin/c++"
 GCCXML_CXXFLAGS=" "
